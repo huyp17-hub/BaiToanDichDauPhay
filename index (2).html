@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mô phỏng Toán 5: Dịch chuyển Dấu phẩy & Bài tập Luyện tập</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Be Vietnam Pro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+    .math-font {
+      font-feature-settings: "tnum";
+      font-variant-numeric: tabular-nums;
+    }
+    @keyframes bounce-comma {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+    .animate-bounce-comma {
+      animation: bounce-comma 1.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-700">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-100">
+          <i data-lucide="calculator" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold text-slate-800 leading-tight">Mô phỏng Toán 5: Dịch chuyển Dấu phẩy</h1>
+          <p class="text-xs text-slate-500 font-medium">Phương pháp Giải toán Hiệu – Tỉ số và Tổng – Tỉ số</p>
+        </div>
+      </div>
+      
+      <!-- Chuyển đổi chế độ (Học bài / Luyện tập) -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+        <button id="tabLesson" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-700 shadow-xs flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+          <span>Bài giảng minh họa</span>
+        </button>
+        <button id="tabPractice" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <i data-lucide="pencil" class="w-3.5 h-3.5"></i>
+          <span>Luyện tập (5 bài)</span>
+          <span id="headerScoreBadge" class="hidden ml-1 px-1.5 py-0.2 bg-emerald-100 text-emerald-700 rounded-full text-[10px]">0/5</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== KHU VỰC 1: BÀI GIẢNG MINH HỌA ==================== -->
+  <div id="viewLesson" class="w-full flex flex-col">
+    <!-- Khung Đề bài mẫu -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 w-full">
+      <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 rounded-2xl p-5 sm:p-6 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 text-blue-100 text-xs font-bold uppercase tracking-wider mb-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-amber-300"></span>
+            Đề bài toán lớp 5
+          </div>
+          <p class="text-base sm:text-xl font-medium leading-relaxed text-white/95">
+            "Khi chuyển dấu phẩy của một số thập phân sang bên trái một hàng thì số đó giảm đi <strong class="text-amber-300 font-bold underline decoration-amber-300/50 underline-offset-4">37,53</strong> đơn vị. Hãy tìm số thập phân ban đầu."
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thanh điều hướng các bước học -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 w-full">
+      <div class="bg-white rounded-xl p-2 border border-slate-200 shadow-xs flex items-center justify-between gap-1 overflow-x-auto">
+        <button class="step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all bg-indigo-50 text-indigo-700 border border-indigo-200" data-step="1">
+          <span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]">1</span>
+          <span>Quy luật dịch phẩy</span>
+        </button>
+        <button class="step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-slate-50" data-step="2">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">2</span>
+          <span>Sơ đồ đoạn thẳng</span>
+        </button>
+        <button class="step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-slate-50" data-step="3">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">3</span>
+          <span>Tính số mới</span>
+        </button>
+        <button class="step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-slate-50" data-step="4">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">4</span>
+          <span>Tìm số ban đầu</span>
+        </button>
+        <button class="step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-slate-50" data-step="5">
+          <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]">5</span>
+          <span>Thử lại & Bài giải</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Nội dung 5 bước học -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full flex-1">
+      
+      <!-- BƯỚC 1 -->
+      <section id="step1" class="step-card bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+        <div class="mb-6 pb-4 border-b border-slate-100">
+          <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Bước 1 trên 5</span>
+          <h2 class="text-xl font-bold text-slate-800">Quy luật: Dịch dấu phẩy sang bên trái một hàng</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class="space-y-4">
+            <p class="text-slate-600 leading-relaxed">
+              Khi chuyển dấu phẩy của một số thập phân sang bên trái một hàng, chữ số đó giảm đi 10 lần (tức là chia cho 10).
+            </p>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-amber-900 text-sm space-y-2">
+              <div class="flex items-center gap-2 font-semibold">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-600"></i>
+                Quy tắc cần nhớ:
+              </div>
+              <ul class="list-disc list-inside space-y-1 text-slate-700">
+                <li>Dịch sang <strong>trái 1 hàng</strong> = Số đó <strong>giảm đi 10 lần</strong>.</li>
+                <li>Nói cách khác: <strong>Số ban đầu gấp 10 lần Số mới</strong>.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+            <span class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Mô phỏng thao tác</span>
+            <div class="my-6 flex items-center justify-center gap-2 text-3xl sm:text-4xl font-extrabold math-font">
+              <div id="demoNumberBox" class="flex items-center bg-white px-6 py-4 rounded-xl border border-slate-300 shadow-inner">
+                <span class="text-slate-800">4</span>
+                <span id="demoCommaOriginal" class="text-indigo-600 animate-bounce-comma inline-block px-0.5">,</span>
+                <span class="text-slate-800">1</span>
+                <span class="text-slate-800">7</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-center gap-3">
+              <button id="btnShiftLeft" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl text-sm transition-all shadow-xs flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                Dịch sang trái 1 hàng
+              </button>
+              <button id="btnShiftReset" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-xl text-sm transition-all">
+                Đặt lại
+              </button>
+            </div>
+            <div id="shiftExplanation" class="mt-4 text-sm font-semibold text-slate-600 min-h-[24px]">
+              Số ban đầu: 41,7
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BƯỚC 2 -->
+      <section id="step2" class="step-card bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs hidden">
+        <div class="mb-6 pb-4 border-b border-slate-100">
+          <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Bước 2 trên 5</span>
+          <h2 class="text-xl font-bold text-slate-800">Vẽ sơ đồ đoạn thẳng biểu thị Hiệu và Tỉ số</h2>
+        </div>
+        <p class="text-slate-600 leading-relaxed mb-6">
+          Coi <strong>Số mới là 1 phần</strong> thì <strong>Số ban đầu gồm 10 phần</strong> bằng nhau như thế:
+        </p>
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 space-y-6">
+          <div>
+            <div class="flex justify-between items-center text-sm font-bold text-slate-700 mb-2">
+              <span>Số mới (1 phần):</span>
+              <span class="text-xs text-indigo-600 font-semibold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">1 phần</span>
+            </div>
+            <div class="w-10 sm:w-14 h-9 bg-indigo-500 rounded-lg border-2 border-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-xs">
+              1 phần
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between items-center text-sm font-bold text-slate-700 mb-2">
+              <span>Số ban đầu (10 phần):</span>
+              <span class="text-xs text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">10 phần</span>
+            </div>
+            <div class="flex items-center gap-1 overflow-x-auto py-1">
+              <div class="w-8 sm:w-11 h-9 bg-indigo-500 rounded-lg border-2 border-indigo-600 flex items-center justify-center text-white text-xs font-bold shrink-0">1</div>
+              <div class="flex items-center gap-1 bg-amber-50 p-1 rounded-xl border border-dashed border-amber-300">
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">2</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">3</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">4</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">5</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">6</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">7</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">8</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">9</div>
+                <div class="w-7 sm:w-9 h-7 bg-amber-400 rounded-md border border-amber-500 flex items-center justify-center text-amber-950 text-xs font-bold shrink-0">10</div>
+              </div>
+            </div>
+            <div class="flex items-center pl-9 sm:pl-12 pt-2">
+              <div class="flex-1 border-t-2 border-b-2 border-amber-500 py-1 text-center bg-amber-100 rounded-md">
+                <span class="text-xs sm:text-sm font-bold text-amber-900">
+                  Hiệu: 9 phần chênh lệch tương ứng với 37,53 đơn vị giảm đi
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 p-4 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center gap-3">
+          <i data-lucide="check-circle-2" class="w-5 h-5 text-indigo-600 shrink-0"></i>
+          <div class="text-sm text-slate-700">
+            <strong>Hiệu số phần bằng nhau là:</strong>
+            <span class="font-bold text-indigo-700 ml-2 text-base">10 − 1 = 9 (phần)</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- BƯỚC 3 -->
+      <section id="step3" class="step-card bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs hidden">
+        <div class="mb-6 pb-4 border-b border-slate-100">
+          <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Bước 3 trên 5</span>
+          <h2 class="text-xl font-bold text-slate-800">Tìm số thập phân mới (Giá trị của 1 phần)</h2>
+        </div>
+        <div class="max-w-2xl mx-auto space-y-6 text-center">
+          <p class="text-slate-600 leading-relaxed">
+            Vì 9 phần bằng nhau có giá trị là <strong>37,53</strong>, nên giá trị của 1 phần (chính là <strong>Số mới</strong>) là:
+          </p>
+          <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 sm:p-8 inline-block shadow-xs">
+            <div class="text-xs font-semibold uppercase text-indigo-600 mb-2">Phép tính tìm số mới</div>
+            <div class="text-3xl sm:text-4xl font-extrabold text-slate-800 math-font flex items-center justify-center gap-3">
+              <span>37,53</span>
+              <span class="text-indigo-600">:</span>
+              <span>9</span>
+              <span class="text-slate-400">=</span>
+              <span class="text-indigo-600 bg-white px-4 py-1.5 rounded-xl border border-indigo-200 shadow-xs">4,17</span>
+            </div>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-left text-sm text-slate-700">
+            <strong>Kết luận:</strong> Số thập phân mới sau khi đã dịch dấu phẩy sang trái là <strong class="text-indigo-700">4,17</strong>.
+          </div>
+        </div>
+      </section>
+
+      <!-- BƯỚC 4 -->
+      <section id="step4" class="step-card bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs hidden">
+        <div class="mb-6 pb-4 border-b border-slate-100">
+          <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Bước 4 trên 5</span>
+          <h2 class="text-xl font-bold text-slate-800">Tìm số thập phân ban đầu</h2>
+        </div>
+        <div class="space-y-6">
+          <p class="text-slate-600 leading-relaxed">
+            Đã biết số mới là <strong>4,17</strong>, ta có thể tìm số ban đầu bằng 1 trong 2 cách:
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6 relative">
+              <span class="absolute -top-3 left-6 px-3 py-0.5 bg-emerald-600 text-white text-xs font-bold rounded-full">Cách 1: Nhân với 10 (Khuyên dùng)</span>
+              <p class="text-sm text-slate-600 mb-3 mt-2">Số ban đầu gấp 10 lần số mới:</p>
+              <div class="text-2xl sm:text-3xl font-extrabold text-emerald-800 math-font text-center py-4 bg-white rounded-xl border border-emerald-200 shadow-xs">
+                4,17 × 10 = <span class="text-emerald-600 underline">41,7</span>
+              </div>
+            </div>
+            <div class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 relative">
+              <span class="absolute -top-3 left-6 px-3 py-0.5 bg-blue-600 text-white text-xs font-bold rounded-full">Cách 2: Cộng với phần giảm đi</span>
+              <p class="text-sm text-slate-600 mb-3 mt-2">Số ban đầu = Số mới + Số giảm đi:</p>
+              <div class="text-2xl sm:text-3xl font-extrabold text-blue-800 math-font text-center py-4 bg-white rounded-xl border border-blue-200 shadow-xs">
+                4,17 + 37,53 = <span class="text-blue-600 underline">41,7</span>
+              </div>
+            </div>
+          </div>
+          <div class="text-center p-6 bg-gradient-to-r from-indigo-50 to-emerald-50 rounded-2xl border border-indigo-200">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Đáp số cuối cùng</div>
+            <div class="text-4xl sm:text-5xl font-black text-indigo-700 math-font">41,7</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BƯỚC 5 -->
+      <section id="step5" class="step-card bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs hidden">
+        <div class="mb-6 pb-4 border-b border-slate-100">
+          <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">Bước 5 trên 5</span>
+          <h2 class="text-xl font-bold text-slate-800">Thử lại & Bài giải mẫu chuẩn</h2>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="space-y-4">
+            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-5 h-5 text-emerald-600"></i>
+              Kiểm tra lại:
+            </h3>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 text-sm">
+              <div class="flex justify-between pb-2 border-b border-slate-200">
+                <span class="text-slate-600">1. Số ban đầu:</span>
+                <strong class="text-slate-800">41,7</strong>
+              </div>
+              <div class="flex justify-between pb-2 border-b border-slate-200">
+                <span class="text-slate-600">2. Số mới (dịch dấu phẩy sang trái):</span>
+                <strong class="text-indigo-600">4,17</strong>
+              </div>
+              <div class="flex justify-between pt-1">
+                <span class="text-slate-600">3. Hiệu hai số (41,70 − 4,17):</span>
+                <strong class="text-emerald-600 font-bold">37,53 (Khớp đề bài!)</strong>
+              </div>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+              <span class="text-xs font-bold uppercase text-amber-800 mb-2 block">Đặt tính trừ kiểm tra</span>
+              <div class="inline-block font-mono text-base font-bold text-slate-800 text-right leading-relaxed">
+                <div>&nbsp;&nbsp;41,70</div>
+                <div>−&nbsp;&nbsp;4,17</div>
+                <div class="border-t-2 border-slate-700">&nbsp;&nbsp;37,53</div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <h3 class="font-bold text-slate-800 flex items-center gap-2">
+              <i data-lucide="file-text" class="w-5 h-5 text-indigo-600"></i>
+              Bài giải mẫu trình bày vào vở:
+            </h3>
+            <div class="bg-indigo-50/50 border border-indigo-200 rounded-xl p-5 text-sm text-slate-700 leading-relaxed space-y-2">
+              <p class="font-bold text-center text-indigo-900 border-b border-indigo-100 pb-1">Bài giải</p>
+              <p>Khi chuyển dấu phẩy của một số thập phân sang bên trái một hàng thì số đó giảm đi 10 lần. Do đó, số ban đầu gấp 10 lần số mới.</p>
+              <p>Coi số mới là 1 phần thì số ban đầu gồm 10 phần bằng nhau như thế.</p>
+              <p>Hiệu số phần bằng nhau là:</p>
+              <p class="text-center font-bold text-slate-800">10 − 1 = 9 (phần)</p>
+              <p>Số thập phân mới là:</p>
+              <p class="text-center font-bold text-slate-800">37,53 : 9 = 4,17</p>
+              <p>Số thập phân ban đầu là:</p>
+              <p class="text-center font-bold text-slate-800">4,17 × 10 = 41,7</p>
+              <p class="text-right font-bold text-indigo-950 pt-2">Đáp số: 41,7</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Nút chuyển bước -->
+      <div class="mt-8 flex items-center justify-between">
+        <button id="btnPrevStep" class="px-5 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-700 hover:bg-slate-100 transition-all text-sm flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          <i data-lucide="chevron-left" class="w-4 h-4"></i>
+          <span>Bước trước</span>
+        </button>
+        <span id="stepIndicator" class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+          Bước 1 / 5
+        </span>
+        <button id="btnNextStep" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 font-semibold text-white transition-all text-sm shadow-md shadow-indigo-100 flex items-center gap-2">
+          <span>Bước tiếp theo</span>
+          <i data-lucide="chevron-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </main>
+  </div>
+
+  <!-- ==================== KHU VỰC 2: BÀI TẬP LUYỆN TẬP ==================== -->
+  <div id="viewPractice" class="w-full flex-col hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 w-full space-y-6">
+      
+      <!-- Thanh tóm tắt tiến độ làm bài -->
+      <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-800">Phiếu Luyện tập: 5 Bài toán Biến đổi Dấu phẩy</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Em hãy điền số thập phân (có thể dùng dấu phẩy hoặc dấu chấm) rồi bấm "Kiểm tra".</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="text-right">
+            <span class="text-xs font-semibold text-slate-500 block">Kết quả làm bài</span>
+            <span id="scoreSummary" class="text-base font-extrabold text-indigo-700">Chưa hoàn thành bài nào</span>
+          </div>
+          <button id="btnResetPractice" class="p-2 text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-xl border border-slate-200 transition-colors" title="Làm lại tất cả">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Danh sách 5 bài tập -->
+      <div id="practiceList" class="space-y-6">
+        <!-- Render bằng Javascript -->
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- Chân trang -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-4">
+    <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-500">
+      Phần mềm hỗ trợ giảng dạy và ôn tập môn Toán lớp 5
+    </div>
+  </footer>
+
+  <!-- SCRIPT ĐIỀU KHIỂN HOẠT ĐỘNG -->
+  <script>
+    // Dữ liệu 5 bài tập chuẩn hóa chính tả 100%
+    const practiceQuestions = [
+      {
+        id: 1,
+        title: "Bài 1 (Dịch sang trái 1 hàng)",
+        prompt: "Khi chuyển dấu phẩy của một số thập phân sang bên trái một hàng thì số đó giảm đi 19,35 đơn vị. Tìm số thập phân ban đầu.",
+        correctAnswer: 21.5,
+        hint: "Khi dịch sang trái 1 hàng thì số đó giảm đi 10 lần. Số ban đầu gấp 10 lần số mới, hiệu số phần là: 10 − 1 = 9 (phần).",
+        solution: "Số mới là: 19,35 : 9 = 2,15.<br>Số ban đầu là: 2,15 × 10 = 21,5 (hoặc 2,15 + 19,35 = 21,5)."
+      },
+      {
+        id: 2,
+        title: "Bài 2 (Dịch sang phải 1 hàng)",
+        prompt: "Khi chuyển dấu phẩy của một số thập phân sang bên phải một hàng thì số đó tăng thêm 222,48 đơn vị. Tìm số thập phân ban đầu.",
+        correctAnswer: 24.72,
+        hint: "Khi dịch sang phải 1 hàng thì số đó tăng lên 10 lần. Số mới gấp 10 lần số ban đầu, hiệu số phần là: 10 − 1 = 9 (phần).",
+        solution: "Số ban đầu tương ứng với 1 phần.<br>Số ban đầu là: 222,48 : 9 = 24,72.<br>(Số mới là: 24,72 × 10 = 247,2; chênh lệch 247,2 − 24,72 = 222,48)."
+      },
+      {
+        id: 3,
+        title: "Bài 3 (Dịch sang trái 2 hàng)",
+        prompt: "Khi chuyển dấu phẩy của một số thập phân sang bên trái hai hàng thì số đó giảm đi 143,55 đơn vị. Tìm số thập phân ban đầu.",
+        correctAnswer: 145,
+        hint: "Khi dịch sang trái 2 hàng thì số đó giảm đi 100 lần. Số ban đầu gấp 100 lần số mới, hiệu số phần là: 100 − 1 = 99 (phần).",
+        solution: "Số mới là: 143,55 : 99 = 1,45.<br>Số ban đầu là: 1,45 × 100 = 145."
+      },
+      {
+        id: 4,
+        title: "Bài 4 (Dịch sang phải 2 hàng)",
+        prompt: "Khi chuyển dấu phẩy của một số thập phân sang bên phải hai hàng thì số đó tăng thêm 420,75 đơn vị. Tìm số thập phân ban đầu.",
+        correctAnswer: 4.25,
+        hint: "Khi dịch sang phải 2 hàng thì số mới gấp 100 lần số ban đầu. Hiệu số phần bằng nhau là: 100 − 1 = 99 (phần).",
+        solution: "Số ban đầu tương ứng với 1 phần.<br>Số ban đầu là: 420,75 : 99 = 4,25."
+      },
+      {
+        id: 5,
+        title: "Bài 5 (Dạng toán Tổng – Tỉ số)",
+        prompt: "Nếu chuyển dấu phẩy của một số thập phân sang bên trái một hàng thì được số mới. Biết tổng của số ban đầu và số mới bằng 80,85. Tìm số thập phân ban đầu.",
+        correctAnswer: 73.5,
+        hint: "Số ban đầu gấp 10 lần số mới. Tổng số phần bằng nhau là: 10 + 1 = 11 (phần).",
+        solution: "Số mới là: 80,85 : 11 = 7,35.<br>Số ban đầu là: 7,35 × 10 = 73,5 (hoặc 80,85 − 7,35 = 73,5)."
+      }
+    ];
+
+    // Trạng thái bài tập
+    let userAnswers = {};
+
+    // Khởi tạo giao diện
+    function renderPracticeList() {
+      const container = document.getElementById('practiceList');
+      container.innerHTML = practiceQuestions.map(q => `
+        <div id="card-q-${q.id}" class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs transition-all">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+            <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider">${q.title}</span>
+            <div id="badge-q-${q.id}" class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-500">
+              Chưa làm
+            </div>
+          </div>
+          
+          <p class="text-slate-800 text-base font-medium leading-relaxed mb-5">${q.prompt}</p>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div class="relative flex-1">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs font-bold">Đáp số:</span>
+              <input 
+                type="text" 
+                id="input-q-${q.id}" 
+                placeholder="Nhập số thập phân..." 
+                class="w-full pl-20 pr-4 py-2.5 rounded-xl border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-800 font-bold math-font text-sm"
+              >
+            </div>
+            <button 
+              onclick="checkSingleQuestion(${q.id})"
+              class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
+            >
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Kiểm tra</span>
+            </button>
+            <button 
+              onclick="toggleSolution(${q.id})"
+              class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="help-circle" class="w-4 h-4"></i>
+              <span>Gợi ý & Lời giải</span>
+            </button>
+          </div>
+
+          <!-- Thông báo phản hồi -->
+          <div id="feedback-q-${q.id}" class="mt-3 text-sm font-semibold hidden"></div>
+
+          <!-- Khung lời giải chi tiết -->
+          <div id="solution-q-${q.id}" class="mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 leading-relaxed hidden">
+            <div class="font-bold text-indigo-700 mb-1 flex items-center gap-1">
+              <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
+              Hướng dẫn giải chi tiết:
+            </div>
+            <p class="text-slate-600 mb-2"><strong>Gợi ý:</strong> ${q.hint}</p>
+            <div class="p-2.5 bg-white rounded-lg border border-slate-200 font-sans">
+              ${q.solution}
+            </div>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // Kiểm tra câu trả lời
+    window.checkSingleQuestion = function(id) {
+      const q = practiceQuestions.find(item => item.id === id);
+      const inputEl = document.getElementById(`input-q-${id}`);
+      const feedbackEl = document.getElementById(`feedback-q-${id}`);
+      const badgeEl = document.getElementById(`badge-q-${id}`);
+      const cardEl = document.getElementById(`card-q-${id}`);
+
+      let rawVal = inputEl.value.trim().replace(',', '.');
+      let userNum = parseFloat(rawVal);
+
+      if (isNaN(userNum)) {
+        feedbackEl.className = 'mt-3 text-xs font-bold text-amber-600 flex items-center gap-1';
+        feedbackEl.innerHTML = '<i data-lucide="alert-circle" class="w-4 h-4"></i> Vui lòng nhập số hợp lệ!';
+        feedbackEl.classList.remove('hidden');
+        lucide.createIcons();
+        return;
+      }
+
+      const isCorrect = Math.abs(userNum - q.correctAnswer) < 0.0001;
+      userAnswers[id] = isCorrect;
+
+      if (isCorrect) {
+        feedbackEl.className = 'mt-3 text-sm font-bold text-emerald-600 flex items-center gap-1.5';
+        feedbackEl.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> Hoan hô! Em đã giải chính xác.';
+        badgeEl.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700';
+        badgeEl.textContent = 'Chính xác';
+        cardEl.className = 'bg-white rounded-2xl p-6 border-2 border-emerald-400 shadow-xs transition-all';
+        
+        // Bắn pháo hoa nhỏ động viên
+        confetti({
+          particleCount: 30,
+          spread: 45,
+          origin: { y: 0.7 }
+        });
+      } else {
+        feedbackEl.className = 'mt-3 text-sm font-bold text-rose-600 flex items-center gap-1.5';
+        feedbackEl.innerHTML = '<i data-lucide="x-circle" class="w-4 h-4"></i> Chưa chính xác rồi, em hãy thử tính lại hoặc xem gợi ý nhé!';
+        badgeEl.className = 'text-xs font-bold px-2.5 py-1 rounded-full bg-rose-100 text-rose-700';
+        badgeEl.textContent = 'Chưa đúng';
+        cardEl.className = 'bg-white rounded-2xl p-6 border-2 border-rose-300 shadow-xs transition-all';
+      }
+      feedbackEl.classList.remove('hidden');
+      updatePracticeSummary();
+      lucide.createIcons();
+    };
+
+    // Đóng/Mở lời giải
+    window.toggleSolution = function(id) {
+      const sol = document.getElementById(`solution-q-${id}`);
+      sol.classList.toggle('hidden');
+    };
+
+    // Cập nhật tổng điểm
+    function updatePracticeSummary() {
+      const totalCorrect = Object.values(userAnswers).filter(Boolean).length;
+      const summaryText = document.getElementById('scoreSummary');
+      const badgeHeader = document.getElementById('headerScoreBadge');
+
+      summaryText.textContent = `Đã làm đúng: ${totalCorrect} / 5 câu`;
+      badgeHeader.textContent = `${totalCorrect}/5`;
+      badgeHeader.classList.remove('hidden');
+      if (totalCorrect === 5) {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+      }
+    }
+
+    // Làm lại bài tập
+    document.getElementById('btnResetPractice').addEventListener('click', () => {
+      userAnswers = {};
+      renderPracticeList();
+      document.getElementById('scoreSummary').textContent = 'Chưa hoàn thành bài nào';
+      document.getElementById('headerScoreBadge').classList.add('hidden');
+    });
+
+    // Chuyển Tab (Bài giảng minh họa <-> Luyện tập)
+    const tabLesson = document.getElementById('tabLesson');
+    const tabPractice = document.getElementById('tabPractice');
+    const viewLesson = document.getElementById('viewLesson');
+    const viewPractice = document.getElementById('viewPractice');
+
+    tabLesson.addEventListener('click', () => {
+      viewLesson.classList.remove('hidden');
+      viewPractice.classList.add('hidden');
+      tabLesson.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-700 shadow-xs flex items-center gap-1.5';
+      tabPractice.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+    });
+
+    tabPractice.addEventListener('click', () => {
+      viewLesson.classList.add('hidden');
+      viewPractice.classList.remove('hidden');
+      tabPractice.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-indigo-700 shadow-xs flex items-center gap-1.5';
+      tabLesson.className = 'px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+      if (!document.getElementById('practiceList').hasChildNodes()) {
+        renderPracticeList();
+      }
+    });
+
+    // Quản lý 5 bước Bài giảng
+    let currentStep = 1;
+    const totalSteps = 5;
+    const navButtons = document.querySelectorAll('.step-nav-btn');
+    const stepCards = document.querySelectorAll('.step-card');
+    const btnPrev = document.getElementById('btnPrevStep');
+    const btnNext = document.getElementById('btnNextStep');
+    const stepIndicator = document.getElementById('stepIndicator');
+
+    function updateStepView(step) {
+      currentStep = step;
+      stepCards.forEach((card, index) => {
+        if (index + 1 === currentStep) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+      });
+
+      navButtons.forEach((btn, index) => {
+        const stepNum = index + 1;
+        const badge = btn.querySelector('span:first-child');
+        if (stepNum === currentStep) {
+          btn.className = 'step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all bg-indigo-50 text-indigo-700 border border-indigo-200';
+          badge.className = 'w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px]';
+        } else if (stepNum < currentStep) {
+          btn.className = 'step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all text-emerald-700 bg-emerald-50/50';
+          badge.className = 'w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]';
+        } else {
+          btn.className = 'step-nav-btn flex-1 min-w-[120px] py-2 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-2 transition-all text-slate-600 hover:bg-slate-50';
+          badge.className = 'w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px]';
+        }
+      });
+
+      btnPrev.disabled = (currentStep === 1);
+      if (currentStep === totalSteps) {
+        btnNext.innerHTML = '<span>Hoàn thành bài học</span><i data-lucide="check" class="w-4 h-4"></i>';
+      } else {
+        btnNext.innerHTML = '<span>Bước tiếp theo</span><i data-lucide="chevron-right" class="w-4 h-4"></i>';
+      }
+      lucide.createIcons();
+      stepIndicator.textContent = `Bước ${currentStep} / ${totalSteps}`;
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        updateStepView(parseInt(btn.getAttribute('data-step')));
+      });
+    });
+
+    btnPrev.addEventListener('click', () => {
+      if (currentStep > 1) updateStepView(currentStep - 1);
+    });
+
+    btnNext.addEventListener('click', () => {
+      if (currentStep < totalSteps) updateStepView(currentStep + 1);
+      else updateStepView(1);
+    });
+
+    // Mô phỏng dịch dấu phẩy ở Bước 1
+    const btnShiftLeft = document.getElementById('btnShiftLeft');
+    const btnShiftReset = document.getElementById('btnShiftReset');
+    const demoNumberBox = document.getElementById('demoNumberBox');
+    const shiftExplanation = document.getElementById('shiftExplanation');
+
+    function resetShiftDemo() {
+      demoNumberBox.innerHTML = `
+        <span class="text-slate-800">4</span>
+        <span id="demoCommaOriginal" class="text-indigo-600 animate-bounce-comma inline-block px-0.5">,</span>
+        <span class="text-slate-800">1</span>
+        <span class="text-slate-800">7</span>
+      `;
+      shiftExplanation.innerHTML = 'Số ban đầu: <strong>41,7</strong>';
+      shiftExplanation.className = 'mt-4 text-sm font-semibold text-slate-600 min-h-[24px]';
+    }
+
+    btnShiftLeft.addEventListener('click', () => {
+      demoNumberBox.innerHTML = `
+        <span class="text-slate-800">4</span>
+        <span class="text-slate-800">1</span>
+        <span class="text-slate-800">7</span>
+      `;
+      setTimeout(() => {
+        demoNumberBox.innerHTML = `
+          <span class="text-indigo-600 font-extrabold animate-bounce-comma inline-block px-0.5">4,</span>
+          <span class="text-slate-800">1</span>
+          <span class="text-slate-800">7</span>
+        `;
+        shiftExplanation.innerHTML = 'Số mới là: <strong class="text-indigo-600 text-base">4,17</strong> (Số ban đầu đã giảm đi 10 lần)';
+        shiftExplanation.className = 'mt-4 text-sm font-semibold text-indigo-700 min-h-[24px]';
+      }, 200);
+    });
+
+    btnShiftReset.addEventListener('click', resetShiftDemo);
+
+    // Khởi chạy ban đầu
+    renderPracticeList();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
